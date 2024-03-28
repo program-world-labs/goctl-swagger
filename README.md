@@ -1,104 +1,104 @@
 # goctl-swagger
 
-### 1. 编译goctl-swagger插件
+### 1. 编译 goctl-swagger 插件
 
 ```
-GOPROXY=https://goproxy.cn/,direct go install github.com/zeromicro/goctl-swagger@latest
+GOPROXY=https://goproxy.cn/,direct go install github.com/program-world-labs/goctl-swagger@latest
 ```
 
 ### 2. 配置环境
 
-将$GOPATH/bin中的goctl-swagger添加到环境变量
+将\$GOPATH/bin 中的 goctl-swagger 添加到环境变量
 
 ### 3. 使用姿势
 
-* 创建api文件
+- 创建 api 文件
 
-    ```go
-    info(
-     title: "type title here"
-     desc: "type desc here"
-     author: "type author here"
-     email: "type email here"
-     version: "type version here"
-    )
-    
-    
-    type (
-     RegisterReq {
-      Username string `json:"username"`
-      Password string `json:"password"`
-      Mobile string `json:"mobile"`
-     }
-     
-     LoginReq {
-      Username string `json:"username"`
-      Password string `json:"password"`
-     }
-     
-     UserInfoReq {
-      Id string `path:"id"`
-     }
-     
-     UserInfoReply {
-      Name string `json:"name"`
-      Age int `json:"age"`
-      Birthday string `json:"birthday"`
-      Description string `json:"description"`
-      Tag []string `json:"tag"`
-     }
-     
-     UserSearchReq {
-      KeyWord string `form:"keyWord"`
-     }
-    )
-    
-    service user-api {
-     @doc(
-      summary: "注册"
-     )
-     @handler register
-     post /api/user/register (RegisterReq)
-     
-     @doc(
-      summary: "登录"
-     )
-     @handler login
-     post /api/user/login (LoginReq)
-     
-     @doc(
-      summary: "获取用户信息"
-     )
-     @handler getUserInfo
-     get /api/user/:id (UserInfoReq) returns (UserInfoReply)
-     
-     @doc(
-      summary: "用户搜索"
-     )
-     @handler searchUser
-     get /api/user/search (UserSearchReq) returns (UserInfoReply)
-    }
-    ```
+  ```go
+  info(
+   title: "type title here"
+   desc: "type desc here"
+   author: "type author here"
+   email: "type email here"
+   version: "type version here"
+  )
 
-* 生成swagger.json 文件
 
-    ```shell script
-    goctl api plugin -plugin goctl-swagger="swagger -filename user.json" -api user.api -dir .
-    ```
+  type (
+   RegisterReq {
+    Username string `json:"username"`
+    Password string `json:"password"`
+    Mobile string `json:"mobile"`
+   }
 
-* 指定Host，basePath，schemes [api-host-and-base-path](https://swagger.io/docs/specification/2-0/api-host-and-base-path/)
+   LoginReq {
+    Username string `json:"username"`
+    Password string `json:"password"`
+   }
 
-    ```shell script
-    goctl api plugin -plugin goctl-swagger="swagger -filename user.json -host 127.0.0.2 -basepath /api -schemes https,wss" -api user.api -dir .
-    ```
+   UserInfoReq {
+    Id string `path:"id"`
+   }
 
-* swagger ui 查看生成的文档
+   UserInfoReply {
+    Name string `json:"name"`
+    Age int `json:"age"`
+    Birthday string `json:"birthday"`
+    Description string `json:"description"`
+    Tag []string `json:"tag"`
+   }
 
-    ```shell script
-     docker run --rm -p 8083:8080 -e SWAGGER_JSON=/foo/user.json -v $PWD:/foo swaggerapi/swagger-ui
-   ```
+   UserSearchReq {
+    KeyWord string `form:"keyWord"`
+   }
+  )
 
-* Swagger Codegen 生成客户端调用代码(go,javascript,php)
+  service user-api {
+   @doc(
+    summary: "注册"
+   )
+   @handler register
+   post /api/user/register (RegisterReq)
+
+   @doc(
+    summary: "登录"
+   )
+   @handler login
+   post /api/user/login (LoginReq)
+
+   @doc(
+    summary: "获取用户信息"
+   )
+   @handler getUserInfo
+   get /api/user/:id (UserInfoReq) returns (UserInfoReply)
+
+   @doc(
+    summary: "用户搜索"
+   )
+   @handler searchUser
+   get /api/user/search (UserSearchReq) returns (UserInfoReply)
+  }
+  ```
+
+- 生成 swagger.json 文件
+
+  ```shell script
+  goctl api plugin -plugin goctl-swagger="swagger -filename user.json" -api user.api -dir .
+  ```
+
+- 指定 Host，basePath，schemes [api-host-and-base-path](https://swagger.io/docs/specification/2-0/api-host-and-base-path/)
+
+  ```shell script
+  goctl api plugin -plugin goctl-swagger="swagger -filename user.json -host 127.0.0.2 -basepath /api -schemes https,wss" -api user.api -dir .
+  ```
+
+- swagger ui 查看生成的文档
+
+  ```shell script
+   docker run --rm -p 8083:8080 -e SWAGGER_JSON=/foo/user.json -v $PWD:/foo swaggerapi/swagger-ui
+  ```
+
+- Swagger Codegen 生成客户端调用代码(go,javascript,php)
 
   ```shell script
   for l in go javascript php; do
@@ -107,4 +107,4 @@ GOPROXY=https://goproxy.cn/,direct go install github.com/zeromicro/goctl-swagger
       -l "$l" \
       -o "/go-work/clients/$l"
   done
-   ```
+  ```
